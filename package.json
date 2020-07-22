@@ -1,0 +1,15 @@
+{
+    "name": "serverless-contact-submission",
+    "description": "Back end for contact form on serverless services such Google Cloud Functions and AWS Lambda.",
+    "version": "1.0.0-alpha1",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pedrosancao/serverless-contact-submission.git"
+    },
+    "main": "src/index.js",
+    "author": "Pedro Sanção (https://github.com/pedrosancao/)",
+    "license": "MIT",
+    "dependencies": {
+        "nodemailer": "^6"
+    }
+}
