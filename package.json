@@ -9,7 +9,12 @@
     "main": "src/index.js",
     "author": "Pedro Sanção (https://github.com/pedrosancao/)",
     "license": "MIT",
+    "scripts": {
+        "test": "node src/test-server.js"
+    },
     "dependencies": {
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
         "nodemailer": "^6"
     }
 }
