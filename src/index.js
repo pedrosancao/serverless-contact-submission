@@ -1,29 +1,29 @@
-const https = require('https')
-const nodemailer = require('nodemailer')
-const querystring = require('querystring')
+const https = require('https');
+const nodemailer = require('nodemailer');
+const querystring = require('querystring');
 
 const app = {
     main (request, response) {
-        app.handleCors(request, response)
+        app.handleCors(request, response);
         app.validateCaptcha(request).then(() => {
             app.validateData(request.body).then(() => {
                 app.sendMail(request.body).then(info => {
-                    response.status(200).send('mail sent')
+                    response.status(200).send('mail sent');
                 }).catch(error => {
-                    console.log(error)
-                    response.status(500).send('error sending mail')
-                })
+                    console.log(error);
+                    response.status(500).send('error sending mail');
+                });
             }).catch(errors => {
-                response.status(422).json(errors)
-            })
+                response.status(422).json(errors);
+            });
         }).catch(error => {
-            response.status(401).send('unauthorized')
-        })
+            response.status(401).send('unauthorized');
+        });
     },
     handleCors (request, response) {
-        const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',')
+        const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
         if (allowedOrigins.indexOf(request.get('origin')) >= 0) {
-            response.header('Access-Control-Allow-Origin', '*')
+            response.header('Access-Control-Allow-Origin', '*');
         }
     },
     validateCaptcha (request) {
@@ -32,7 +32,7 @@ const app = {
                 secret   : process.env.CAPTCHA_SECRET,
                 response : request.body['g-recaptcha-response'],
                 remoteip : request.ip
-            })
+            });
 
             const verifyReq = https.request({
                 hostname : 'www.google.com',
@@ -43,30 +43,30 @@ const app = {
                     'Content-Length' : Buffer.byteLength(verifyData)
                 }
             }, verifyRes => {
-                let responseData = ''
+                let responseData = '';
                 verifyRes.on('data', data => {
-                    responseData += data
-                })
+                    responseData += data;
+                });
                 verifyRes.on('end', () => {
-                    let response = JSON.parse(responseData)
+                    let response = JSON.parse(responseData);
                     if (!response.success) {
-                        reject('unauthorized')
+                        reject('unauthorized');
                     } else {
-                        resolve()
+                        resolve();
                     }
-                })
-            })
+                });
+            });
             verifyReq.on('error', error => {
-                reject(error)
-            })
-            verifyReq.write(verifyData)
-            verifyReq.end()
-        })
+                reject(error);
+            });
+            verifyReq.write(verifyData);
+            verifyReq.end();
+        });
     },
     validateData (data) {
         return new Promise((resolve, reject) => {
-            const { Validator } = require('jsonschema')
-            const validator = new Validator
+            const { Validator } = require('jsonschema');
+            const validator = new Validator;
             const validation = validator.validate(data, {
                 id : '/',
                 type : 'object',
@@ -92,13 +92,13 @@ const app = {
                         required  : true
                     }
                 }
-            })
+            });
             if (validation.errors.length > 0){
-                reject(validation.errors)
+                reject(validation.errors);
             } else {
-                resolve()
+                resolve();
             }
-        })
+        });
     },
     sendMail (data) {
         return new Promise((resolve, reject) => {
@@ -110,24 +110,24 @@ const app = {
                     user : process.env.SMTP_USER,
                     pass : process.env.SMTP_PASS
                 }
-            }
-            const transport = nodemailer.createTransport(options)
+            };
+            const transport = nodemailer.createTransport(options);
             const message = {
                 from    : options.auth.user,
                 to      : process.env.MAIL_TO,
                 replyTo : `${data.name} <${data.email}>`,
                 subject : process.env.MAIL_SUBJECT,
                 text    : `message from ${data.name}\nphone ${data.phone}\n\n${data.message}`
-            }
+            };
             transport.sendMail(message, function(error, info) {{}
                 if (error) {
-                    reject(error)
+                    reject(error);
                 } else {
-                    resolve(info)
+                    resolve(info);
                 }
-            })
-        })
+            });
+        });
     }
-}
+};
 
-module.exports = app
+module.exports = app;
