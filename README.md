@@ -9,6 +9,11 @@ This Node service has small footprint as it only require two other packages with
 add new dependencies: [jsonschema][0] for validation and [nodemailer][1] for SMTP client.
 Recaptcha verifier uses native modules.
 
+## Black lives matter
+
+**This repository has no master**. Read more:
+[GitHub abandons 'master' term to avoid slavery row][master-replace].
+
 ## Instaling on Google Cloud Functions
 
 - Zip this project and upload onto the Google Cloud Function
@@ -50,3 +55,4 @@ Currently this service won't run on AWS Lambda, to add support keep in mind:
 [0]: https://www.npmjs.com/package/jsonschema
 [1]: https://www.npmjs.com/package/nodemailer
 [2]: https://docs.aws.amazon.com/lambda/latest/dg/nodejs-package.html#nodejs-package-dependencies
+[master-replace]: https://www.bbc.com/news/technology-53050955
